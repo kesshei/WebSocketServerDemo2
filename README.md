@@ -1,4 +1,3 @@
-# .Net Core 实现WebSocket Server 的另外三种方式
 # 回顾
 之前已经写过关于《WebSocket 原生socket实现》和《.Net Core WebSocket 服务端与客户端完整示例》以及《基于.Net TcpListener 实现 WebSocketServer 通讯》。
 
@@ -98,7 +97,7 @@ Websocket 自己还实现了ping和pong心跳支持。
 socket = ServerSocket.Accept();
 WebSocket = WebSocket.CreateFromStream(new NetworkStream(socket), true, null, TimeSpan.FromSeconds(5));
 ```
-其中的s就是 原生socket接收到的客户端socket对象，直接转换就可以了。
+原生socket接收到的客户端socket对象，直接转换就可以了。
 
 ## TcpListener 支持WebSocket Server
 大致同上，同一个原理，都需要自己处理握手
@@ -129,9 +128,9 @@ WebSocket = webSocketContext.WebSocket;
 
 ## 结果展示
 测试的大致逻辑是
-1.先启动服务端，再启动客户端
-2.客户端循环发送数据，先发送19次文字，再发送一个633M的视频大文件
-3.服务端收到后，如果是文字，就回复给客户端，如果不是文字，就输出大文件的大小
+1. 先启动服务端，再启动客户端
+2. 客户端循环发送数据，先发送19次文字，再发送一个633M的视频大文件
+3. 服务端收到后，如果是文字，就回复给客户端，如果不是文字，就输出大文件的大小
 
 这个逻辑用来测试，应该没啥大问题。
 
@@ -143,9 +142,12 @@ WebSocket = webSocketContext.WebSocket;
 ![](https://tupian.wanmeisys.com/markdown/1668327221294-d367843f-3123-4eb6-94e3-4359c1a1de2b.png)
 
 ## 需注意
+
 特别是发送的操作，发送本身不能并发。
-以下是 官方 资料引用 [2]
+
+官方 资料引用 [2]
 ![](https://tupian.wanmeisys.com/markdown/1668327594873-9a9e3a83-a667-42e0-a4ac-80ad747687d3.png)
+
 所以，在处理接收的时候，我们一般都是一个接收，但是，发送的地方经常被忽视。这个地方需要特殊处理的。
 
 ## 总结
